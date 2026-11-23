@@ -1,0 +1,109 @@
+{
+ "version": 2,
+ "tips": [
+  {
+   "id": "centering",
+   "title": "Stay centered in every gunfight",
+   "category": "Aim",
+   "advantage": true,
+   "added": "2026-11-23",
+   "source": "JGOD (top Warzone YouTuber), with pro Tommey as his example",
+   "overview": "Keep your crosshair lined up with where the enemy will appear before the fight starts, instead of correcting after contact.",
+   "why": "JGOD says even a tiny correction when you are off-centre can be enough to lose a gunfight. He points to top pro Tommey as an example of how good centering can even cover for mistakes.",
+   "how": "Pre-aim common angles and doorways, and keep your crosshair at head height while you move. Benefit: you start fights already on target, which JGOD says helps you win more gunfights and raise your K/D.",
+   "nav": "",
+   "video": "https://www.youtube.com/results?search_query=JGOD+Warzone+centering+win+gunfights"
+  },
+  {
+   "id": "minimap",
+   "title": "Check the minimap constantly",
+   "category": "Awareness",
+   "advantage": false,
+   "added": "2026-11-22",
+   "source": "JGOD (top Warzone YouTuber)",
+   "overview": "Glance at the minimap far more often than feels natural.",
+   "why": "JGOD says frequent minimap checks let you spot enemy movement early, so you can plan rotations and avoid most ambushes.",
+   "how": "Look at it every few seconds and before every move, then rotate away from enemy activity. Benefit: safer, more efficient rotations and fewer surprise fights.",
+   "nav": "",
+   "video": "https://www.youtube.com/results?search_query=JGOD+Warzone+minimap+rotations"
+  },
+  {
+   "id": "late-game",
+   "title": "Take high ground and save killstreaks for the end",
+   "category": "Late game",
+   "advantage": true,
+   "added": "2026-11-21",
+   "source": "JGOD (top Warzone YouTuber)",
+   "overview": "In the final circles, choose high ground and solid cover, and keep your killstreaks for the end.",
+   "why": "JGOD describes the late-game circle as hard to read, so positioning and awareness decide most wins. Killstreaks such as Precision Strike and UAV are most useful when few squads remain.",
+   "how": "Move early to a high, covered spot, then use UAV and Precision Strike to pressure the squads that are left. Benefit: you control the sightlines and can corner the remaining players.",
+   "nav": "",
+   "video": "https://www.youtube.com/results?search_query=JGOD+Warzone+late+game+positioning"
+  },
+  {
+   "id": "final-circle-plan",
+   "title": "Plan your final-circle positions in advance",
+   "category": "Late game",
+   "advantage": false,
+   "added": "2026-11-20",
+   "source": "Liam “Jukeyz” James (pro Warzone player), via Red Bull",
+   "overview": "Before the last circles close, imagine the situations you could end up in and choose your spot to match.",
+   "why": "Jukeyz says he thinks through the possible situations for the final circles so that his positioning is as strong as it can be.",
+   "how": "Early in the match, picture where enemies could come from and pick a spot that covers those angles. Benefit: you enter the final circles with a plan instead of reacting.",
+   "nav": "",
+   "video": "https://www.youtube.com/results?search_query=Jukeyz+Warzone+final+circle+positioning"
+  },
+  {
+   "id": "tactical-layout",
+   "title": "Use a Tactical (flipped) button layout",
+   "category": "Controller",
+   "advantage": true,
+   "added": "2026-11-19",
+   "source": "Aydan (top-earning pro Warzone player), reported by ONE Esports",
+   "overview": "Aydan uses the Tactical Flipped layout: aim with L1 and shoot with R1.",
+   "why": "ONE Esports reports that many pros and streamers use this layout because the bumpers give a more tactile response than the default triggers.",
+   "how": "Set the Tactical preset, turn on the flip option, then practise in a private match. Benefit: quicker, more tactile aim and fire inputs. If it feels worse, go back to your old layout.",
+   "nav": "Settings (gear icon) → Controller → Inputs → Button Layout Preset, plus the Flip L1/L2 and R1/R2 option. Names can vary slightly by platform and version.",
+   "video": "https://www.youtube.com/results?search_query=Aydan+Warzone+controller+settings"
+  },
+  {
+   "id": "same-sens",
+   "title": "Keep horizontal and vertical sensitivity equal",
+   "category": "Controller",
+   "advantage": false,
+   "added": "2026-11-18",
+   "source": "Settings of 33 top Warzone players, reported by Charlie INTEL",
+   "overview": "Set your horizontal and vertical stick sensitivity to the same value.",
+   "why": "A compilation of the controller settings of 33 of Warzone’s best players, reported by Charlie INTEL, shows that almost every pro uses the same value for both.",
+   "how": "Pick one value you can control and apply it to both, then change them together in small steps. Benefit: your aim feels consistent in every direction.",
+   "nav": "Settings (gear icon) → Controller → Aiming → Horizontal Stick Sensitivity and Vertical Stick Sensitivity.",
+   "video": "https://www.youtube.com/results?search_query=Warzone+pro+controller+sensitivity+settings"
+  },
+  {
+   "id": "fov",
+   "title": "Raise your Field of View",
+   "category": "Settings",
+   "advantage": true,
+   "added": "2026-11-17",
+   "source": "Aydan and JGOD",
+   "overview": "Aydan plays on a Field of View of 105 (from his published settings), so more of the battlefield is on screen.",
+   "why": "A wider FOV shows more around you, so you spot enemies sooner. JGOD points out that other settings need adjusting to get the full benefit of a higher FOV.",
+   "how": "Raise it in steps towards 105 and test in a private match. Aydan also keeps ADS Field of View on Affected. Benefit: better peripheral awareness. A very high FOV can lower performance on older PCs, so check your frame rate.",
+   "nav": "Settings (gear icon) → Graphics → View → Field of View.",
+   "video": "https://www.youtube.com/results?search_query=JGOD+Warzone+field+of+view+FOV"
+  },
+  {
+   "id": "clean-visuals",
+   "title": "Switch off blur, depth of field and film grain",
+   "category": "Settings",
+   "advantage": false,
+   "added": "2026-11-16",
+   "source": "Aydan, reported by ONE Esports and Gfinity",
+   "overview": "Aydan turns off World Motion Blur, Weapon Motion Blur and Depth of Field, and sets Film Grain to 0.00.",
+   "why": "Cutting these effects removes visual clutter and keeps the image sharp while you track targets. Aydan’s graphics setup is aimed at smoother gameplay.",
+   "how": "Disable each effect and set Film Grain to 0. Benefit: a cleaner image and easier target tracking.",
+   "nav": "Settings (gear icon) → Graphics, then check the Details & Textures and post-processing sections. These options are mainly on PC, and tab names can vary by platform and version.",
+   "video": "https://www.youtube.com/results?search_query=Aydan+Warzone+graphics+settings"
+  }
+ ]
+}
