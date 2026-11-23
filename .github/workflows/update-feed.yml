@@ -1,0 +1,121 @@
+name: Update feed
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add new Warzone videos, Shorts and updates to feed.json
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, urllib.request, urllib.parse, datetime, hashlib
+          import xml.etree.ElementTree as ET
+          from email.utils import parsedate_to_datetime
+          # YouTube channels (Shorts are included in each channel feed). Edit freely.
+          NAMES = ["JGOD","Aydan","Scrappy","HusKerrs","Biffle","Almxnd","FifaKill","Newbz",
+                   "Destroy","N4NO","Shifty","Hisoka","Echo","Disrrpt","Spam","Melvn","Slappy",
+                   "FLS","Anziety","Cythe","Bigman","zSmit","HalloW","Enkeo","Gromalok"]
+          # News / update sites (RSS). Only items mentioning Warzone are used.
+          NEWS = ["https://mp1st.com/feed", "https://www.dexerto.com/feed", "https://www.charlieintel.com/feed"]
+          FLAGS = ["new meta", "broken", "buff", "nerf", "best settings", "best loadout"]
+          DAYS, KEEP_AUTO, MAX_NEW = 7, 40, 12
+          KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+          def get(u):
+              r = urllib.request.Request(u, headers={"User-Agent": "Mozilla/5.0"})
+              return urllib.request.urlopen(r, timeout=30).read().decode("utf-8", "ignore")
+          def strip(h): return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", h or "")).strip()
+          def channel_id(name):
+              try:
+                  m = re.search(r'"(?:channelId|externalId)":"(UC[\w-]{22})"', get("https://www.youtube.com/@" + name))
+                  if m: return m.group(1)
+              except Exception: pass
+              page = get("https://www.youtube.com/results?search_query=" + urllib.parse.quote(name + " warzone") + "&sp=EgIQAg%3D%3D")
+              m = re.search(r'"channelId":"(UC[\w-]{22})"', page)
+              return m.group(1) if m else None
+          feed = json.load(open("feed.json", encoding="utf-8"))
+          tips = feed["tips"]
+          skipped = feed.get("skipped", [])
+          have = {t["id"] for t in tips} | set(skipped)
+          cutoff = datetime.date.today() - datetime.timedelta(days=DAYS)
+          ns = {"a": "http://www.w3.org/2005/Atom", "yt": "http://www.youtube.com/xml/schemas/2015", "m": "http://search.yahoo.com/mrss/"}
+          cands = []
+          for name in NAMES:
+              try:
+                  cid = channel_id(name)
+                  if not cid: print("No channel found for", name); continue
+                  root = ET.fromstring(get("https://www.youtube.com/feeds/videos.xml?channel_id=" + cid))
+                  for e in root.findall("a:entry", ns):
+                      vid = e.find("yt:videoId", ns).text
+                      d = e.find("m:group/m:description", ns)
+                      cands.append({"id": "yt-" + vid, "title": e.find("a:title", ns).text,
+                          "text": (d.text or "")[:1500] if d is not None else "",
+                          "link": "https://www.youtube.com/watch?v=" + vid,
+                          "day": e.find("a:published", ns).text[:10], "cat": "Video"})
+              except Exception as ex:
+                  print("Skipped", name, ex)
+          for u in NEWS:
+              try:
+                  for it in ET.fromstring(get(u)).iter("item"):
+                      link = it.findtext("link") or ""
+                      day = parsedate_to_datetime(it.findtext("pubDate")).date().isoformat()
+                      cands.append({"id": "news-" + hashlib.md5(link.encode()).hexdigest()[:12],
+                          "title": it.findtext("title") or "", "text": strip(it.findtext("description"))[:1500],
+                          "link": link, "day": day, "cat": "Update"})
+              except Exception as ex:
+                  print("Skipped feed", u, ex)
+          def ask(item):
+              prompt = ("You write short Call of Duty Warzone guide cards in English. From the item below, return ONLY JSON with keys: "
+                  "relevant (true only if it teaches a Warzone tip, setting, movement, aim or strategy, or reports a Warzone update), "
+                  "overview (1-2 sentences), why (the reason it matters), how (how to do it, plus the benefit), "
+                  "nav (the in-game menu path only if a setting is involved, else empty string), "
+                  "edge (true only if it gives a clear competitive advantage). "
+                  "Never mention creators, channels, streamers or websites.\n\nTitle: " + item["title"] + "\nText: " + item["text"])
+              body = json.dumps({"model": "claude-haiku-5-5", "max_tokens": 700, "messages": [{"role": "user", "content": prompt}]}).encode()
+              req = urllib.request.Request("https://api.anthropic.com/v1/messages", data=body,
+                  headers={"x-api-key": KEY, "anthropic-version": "2023-06-01", "content-type": "application/json"})
+              txt = json.loads(urllib.request.urlopen(req, timeout=60).read())["content"][0]["text"]
+              return json.loads(re.search(r"\{.*\}", txt, re.S).group(0))
+          new = []
+          cands = sorted(cands, key=lambda c: c["day"], reverse=True)
+          for c in cands:
+              if len(new) >= MAX_NEW: break
+              if c["id"] in have or datetime.date.fromisoformat(c["day"]) < cutoff: continue
+              low = (c["title"] + " " + c["text"]).lower()
+              if "warzone" not in low:
+                  skipped.append(c["id"]); continue
+              try:
+                  if KEY:
+                      r = ask(c)
+                      if not r.get("relevant"):
+                          skipped.append(c["id"]); continue
+                      f = {"overview": r.get("overview", ""), "why": r.get("why", ""), "how": r.get("how", ""),
+                           "nav": r.get("nav", ""), "advantage": bool(r.get("edge"))}
+                  else:
+                      f = {"overview": c["title"], "why": "", "how": "", "nav": "",
+                           "advantage": any(k in c["title"].lower() for k in FLAGS)}
+              except Exception as ex:
+                  print("AI failed for", c["id"], ex); continue
+              new.append({"id": c["id"], "title": c["title"], "category": c["cat"], "added": c["day"],
+                          "source": "", "video": c["link"], **f})
+          curated = [t for t in tips if not (t["id"].startswith("yt-") or t["id"].startswith("news-"))]
+          auto = [t for t in tips if t["id"].startswith(("yt-", "news-"))] + new
+          auto = sorted(auto, key=lambda t: t["added"], reverse=True)[:KEEP_AUTO]
+          feed["tips"] = curated + auto
+          feed["skipped"] = skipped[-400:]
+          feed["version"] = max(feed.get("version", 1), 3)
+          json.dump(feed, open("feed.json", "w", encoding="utf-8"), indent=1, ensure_ascii=False)
+          print("Added", len(new), "new items; AI summaries:", "on" if KEY else "off")
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "feed-bot"
+          git config user.email "feed-bot@users.noreply.github.com"
+          git add feed.json
+          git diff --cached --quiet || (git commit -m "Update feed" && git push)
