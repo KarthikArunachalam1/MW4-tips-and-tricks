@@ -13,4 +13,6 @@ jobs:
       - run: unzip -o MW4Tips.zip
       - run: cd MW4Tips && gradle assembleDebug
       - uses: actions/upload-artifact@v4
-        with: {name: app-debug, path: MW4Tips/app/build/outputs/apk/debug/app-debug.apk}
+        with:
+          name: Warzone-tips-and-updates
+          path: MW4Tips/app/build/outputs/apk/debug/*.apk
